@@ -9,6 +9,8 @@ const spriteElement = document.getElementById("sprite"); //element object from H
 const guess = document.getElementById("guess"); //element object from HTML with an id 'guess'
 const streakElement = document.getElementById("streak"); //element object from HTML with an id 'streak'
 const pokemonNameElement = document.getElementById("pokemon-name"); //element object from HTML with an id 'pokemon-name'
+const checkBtn = document.querySelector('#check-btn');
+
 var streak = 0; //initialize streak to zero
 var pokemonName = ""; //set pokemon name as global variable
 var pokemonData; //variable which holds the response from Pokemon API
@@ -20,12 +22,19 @@ guess.addEventListener("keypress", function (e) {
   }
 });
 
+//// click to button
+checkBtn.addEventListener('click', checkGuess);
+
 // Execute this function to play the audio
 function playPokemonMp3() {
   var audio = new Audio("whos-that-pokemon_.mp3");
 
   audio.play();
 }
+
+//// play audio when user input
+guess.addEventListener('focusin', playPokemonMp3);
+
 
 //function that fetched Pokemon data from the API
 const fetchPokemonData = async function (url) {
@@ -40,7 +49,7 @@ var main = async function () {
 
 //function that compares player's guess with Pokemon name and based on that either increases or resets streak
 function checkGuess() {
-  if (pokemonName.toLowerCase() === guess.value) {
+  if (pokemonName.toLowerCase() === guess.value.toLowerCase()) {
     streak++; //correct guess - increase streak by one
   } else {
     streak = 0; //wrong guess - reset streak
@@ -51,7 +60,8 @@ function checkGuess() {
 function getPokemon() {
   pokemonNameElement.innerHTML = "";
   guess.value = ""; //after user makes a guess and presses Enter, that value should be removed from input field before new guess
-  let pokemonNumber = getRandomIntInclusive(offset, limit + offset); //get a random number
+  let pokemonNumber = getRandomInt(pokemonData.length); //get a random number
+  console.log("🚀 ~ file: action.js:67 ~ getPokemon ~ pokemonNumber:", pokemonNumber)
   pokemonName = pokemonData[pokemonNumber].name; //get pokemon name who's number is randomly generated number
   spriteElement.style.setProperty("transition", "initial"); //reset CSS transition property
   spriteElement.src = ""; //reset sprite URL so it has smooth transition to new Pokemon sprite
@@ -67,11 +77,9 @@ function showPokemon() {
   pokemonNameElement.innerHTML = pokemonName; // show Pokemon's name
   setTimeout(() => getPokemon(), 2000); // wait two seconds before generating new Pokemon and start the same logic again
 }
-//function that generates random number between min value and max value.
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+//// function that generates random number between min value and max value.
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
 }
 //function call that starts application
 main();

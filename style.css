@@ -45,6 +45,15 @@ body {
   text-align: center;
 }
 
+#check-btn {
+  width: 25%;
+  height: 50px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 20px;
+  text-align: center;
+}
+
 .row {
   display: flex;
   flex-flow:row;
